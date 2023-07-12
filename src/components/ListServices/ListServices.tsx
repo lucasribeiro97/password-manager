@@ -7,9 +7,14 @@ type ListServicesProps = {
     password: string;
     url: string;
   }>;
+  handleRemoveService: (index: number) => void;
 };
 
-function ListServices({ services }: ListServicesProps) {
+function ListServices({ services, handleRemoveService }: ListServicesProps) {
+  const handleRemoveClick = (index: number) => {
+    handleRemoveService(index);
+  };
+
   return (
     <div>
       {services.map((service, index) => (
@@ -17,14 +22,21 @@ function ListServices({ services }: ListServicesProps) {
           <a href={ service.url }>{service.service}</a>
           <p>
             Login:
-            {' '}
-            {service.login}
+            <span>
+              {service.login}
+            </span>
           </p>
           <p>
             Senha:
             {' '}
             {service.password}
           </p>
+          <button
+            onClick={ () => handleRemoveClick(index) }
+            data-testid="remove-btn"
+          >
+            Remover
+          </button>
         </div>
       ))}
     </div>

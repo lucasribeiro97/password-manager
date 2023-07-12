@@ -19,13 +19,19 @@ function App() {
     setShowRegisterButton(true);
   };
 
+  const handleRemoveService = (index: number) => {
+    const updatedServices = [...services];
+    updatedServices.splice(index, 1);
+    setServices(updatedServices);
+  };
+
   return (
     <div>
       <Title />
       {services.length === 0 ? (
         <p>Nenhuma senha cadastrada</p>
       ) : (
-        <ListServices services={ services } />
+        <ListServices services={ services } handleRemoveService={ handleRemoveService } />
       )}
       {showRegisterButton ? (
         <button onClick={ () => setShowRegisterButton(false) }>
