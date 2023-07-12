@@ -26,10 +26,6 @@ export default function Form({ handleCancel }: Props) {
     });
   }
 
-  /*   function resetForm() {
-    setFormInfo(INITIAL_STATE);
-  } */
-
   function isFormValid() {
     if (!service || !login || !password || !url) {
       return false;
@@ -47,6 +43,10 @@ export default function Form({ handleCancel }: Props) {
 
     // Verificar se a senha possui algum caractere especial
     return !(!/[!@#$%^&*]/.test(password));
+  }
+
+  function getPasswordValidityClass(valid: boolean) {
+    return valid ? 'valid-password-check' : 'invalid-password-check';
   }
 
   return (
@@ -95,6 +95,20 @@ export default function Form({ handleCancel }: Props) {
           onChange={ handleChange }
         />
       </label>
+      <div>
+        <p className={ getPasswordValidityClass(password.length >= 8) }>
+          Possuir 8 ou mais caracteres
+        </p>
+        <p className={ getPasswordValidityClass(password.length <= 16) }>
+          Possuir até 16 caracteres
+        </p>
+        <p className={ getPasswordValidityClass(/[a-zA-Z]/.test(password) && /[0-9]/.test(password)) }>
+          Possuir letras e números
+        </p>
+        <p className={ getPasswordValidityClass(/[!@#$%^&*]/.test(password)) }>
+          Possuir algum caractere especial
+        </p>
+      </div>
       <button disabled={ !isFormValid() }>Cadastrar</button>
       <button onClick={ handleCancel }>Cancelar</button>
     </form>
