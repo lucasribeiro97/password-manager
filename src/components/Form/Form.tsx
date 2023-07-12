@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './Form.css';
 import { FormProps } from '../../types';
 
 type Props = {
+  handleSubmit: (serviceInfo: FormProps) => void;
   handleCancel: () => void;
 };
 
@@ -13,17 +14,17 @@ const INITIAL_STATE = {
   url: '',
 };
 
-export default function Form({ handleCancel }: Props) {
+export default function Form({ handleSubmit, handleCancel }: Props) {
   const [formInfo, setFormInfo] = useState<FormProps>(INITIAL_STATE);
   const { service, login, password, url } = formInfo;
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement
   | HTMLSelectElement | HTMLTextAreaElement>) {
     const { name, value } = event.target;
-    setFormInfo({
-      ...formInfo,
+    setFormInfo((prevFormInfo) => ({
+      ...prevFormInfo,
       [name]: value,
-    });
+    }));
   }
 
   function isFormValid() {
@@ -49,8 +50,16 @@ export default function Form({ handleCancel }: Props) {
     return valid ? 'valid-password-check' : 'invalid-password-check';
   }
 
+  const handleSubmitForm = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (isFormValid()) {
+      handleSubmit(formInfo);
+      setFormInfo(INITIAL_STATE);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={ handleSubmitForm }>
       <label>
         Nome do serviço
         <input
@@ -102,7 +111,11 @@ export default function Form({ handleCancel }: Props) {
         <p className={ getPasswordValidityClass(password.length <= 16) }>
           Possuir até 16 caracteres
         </p>
-        <p className={ getPasswordValidityClass(/[a-zA-Z]/.test(password) && /[0-9]/.test(password)) }>
+        <p
+          className={ getPasswordValidityClass(
+            /[a-zA-Z]/.test(password) && /[0-9]/.test(password),
+          ) }
+        >
           Possuir letras e números
         </p>
         <p className={ getPasswordValidityClass(/[!@#$%^&*]/.test(password)) }>
@@ -110,7 +123,9 @@ export default function Form({ handleCancel }: Props) {
         </p>
       </div>
       <button disabled={ !isFormValid() }>Cadastrar</button>
-      <button onClick={ handleCancel }>Cancelar</button>
+      <button type="button" onClick={ handleCancel }>
+        Cancelar
+      </button>
     </form>
   );
 }

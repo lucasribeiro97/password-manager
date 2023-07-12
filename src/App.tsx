@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import './App.css';
 import Title from './components/Title/Title';
+import ListServices from './components/ListServices/ListServices';
 import Form from './components/Form/Form';
+import { FormProps } from './types';
 
 function App() {
-  const [showForm, setShowForm] = useState(false);
   const [showRegisterButton, setShowRegisterButton] = useState(true);
+  const [services, setServices] = useState<FormProps[]>([]);
 
-  const handleClick = () => {
-    setShowForm(true);
-    setShowRegisterButton(false);
+  const handleFormSubmit = (serviceInfo: FormProps) => {
+    setServices([...services, serviceInfo]);
+    setShowRegisterButton(true);
   };
 
   const handleCancel = () => {
@@ -20,9 +22,18 @@ function App() {
   return (
     <div>
       <Title />
-      {showForm && !showRegisterButton
-        ? <Form handleCancel={ handleCancel } />
-        : <button onClick={ handleClick }>Cadastrar nova senha</button>}
+      {services.length === 0 ? (
+        <p>Nenhuma senha cadastrada</p>
+      ) : (
+        <ListServices services={ services } />
+      )}
+      {showRegisterButton ? (
+        <button onClick={ () => setShowRegisterButton(false) }>
+          Cadastrar nova senha
+        </button>
+      ) : (
+        <Form handleSubmit={ handleFormSubmit } handleCancel={ handleCancel } />
+      )}
     </div>
   );
 }
