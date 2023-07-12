@@ -22,14 +22,11 @@ function ListServices({ services, handleRemoveService }: ListServicesProps) {
           <a href={ service.url }>{service.service}</a>
           <p>
             Login:
-            <span>
-              {service.login}
-            </span>
+            <span>{service.login}</span>
           </p>
           <p>
             Senha:
-            {' '}
-            {service.password}
+            <span>{service.password}</span>
           </p>
           <button
             onClick={ () => handleRemoveClick(index) }
